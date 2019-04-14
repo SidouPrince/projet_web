@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+	<link rel="stylesheet" type="text/css" href="{{ asset('css/partenaire.css') }}">
+{% endblock %}
+{% block body %}
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+		<a class="navbar-brand" href="#">Mon site</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarColor01">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item active">
+					<a  class="nav-link" href="{{ path('devenirPartenaire') }}">Devenir partenaire</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/">A propos de nous</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Connexion</a>
+				</li>
+				<li class="nav-item">
+				</ul>
+				<form class="form-inline my-2 my-lg-0">
+					<input class="form-control mr-sm-2" type="text" placeholder="Search">
+					<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+				</form>
+			</div>
+		</nav>
+		<div class="register-form container">
+			<div class="row">
+				<div class="col-sm-6">
+					{{  form_start(partenaire) }}
+					<legend><p class="text-muted">A propos de vous</p></legend>
+					<div class="form-group">
+						{{ form_row(partenaire.email, {'attr': {'placeholder': "votre e-mail...", 'type': "email", 'class': "form-control"}})
+						}}
+					</div>
+					<div class="form-group">
+						{{ form_row(partenaire.nom, {'attr': {'placeholder': "votre Nom...", 'type': "text", 'class': "form-control"}})
+						}}
+					</div>
+					<div class="form-group">
+						{{ form_row(partenaire.prenom, {'attr': {'placeholder': "votre Prénom...", 'type': "text", 'class': "form-control"}})
+						}}
+					</div>
+					<div class="form-group">
+						{{ form_row(partenaire.telephone, {'attr': {'placeholder': "votre Numero de téléphone...", 'type': "number", 'class': "form-control"}})
+						}}
+					</div>
+					{{  form_end(partenaire) }}
+				</div>
+				{##############################################}
+				
+				<div class="col-sm-6">
+					{{ form_start(formEtablissement) }}
+					<legend><p class="text-muted">A propos de votre établissement</p></legend>
+					<div class="form-group">
+						{{ form_row(formEtablissement.nomSociete, {'attr': {'placeholder': "Le nom de votre societe", 'class': "form-control"}}
+						) }}
+					</div>
+					<div class="form-group">
+						{{ form_row(formEtablissement.typeActivite, {'attr': {'placeholder': "Le type de votre societe", 'class': "form-control"}}
+						) }}
+					</div>
+					<div class="form-group">
+						{{ form_row(formEtablissement.nomSociete, {'attr': {'placeholder': "0", 'class': "form-control"}}
+						) }}
+					</div>
+					<div class="form-group">
+						{{ form_row(formEtablissement.employes, {'attr': {'placeholder': "0", 'class': "form-control"}}
+						) }}
+					</div>
+					<div class="form-group">
+						{{ form_row(formEtablissement.rue, {'attr': {'placeholder': "ex: 2 allee des spoutniks", 'class': "form-control"}}
+						) }}
+					</div>
+					<div class="form-group">
+						{{ form_row(formEtablissement.codePostale, {'attr': {'placeholder': "ex: 93700", 'class': "form-control"}}
+						) }}
+					</div>
+					<div class="form-group">
+						{{ form_row(formEtablissement.ville, {'attr': {'placeholder': "Votre ville", 'class': "form-control"}}
+						) }}
+					</div>
+					{{ form_end( formEtablissement ) }}
+				</div>
+			</div>
+		</div>
+		
+	{% endblock %}
