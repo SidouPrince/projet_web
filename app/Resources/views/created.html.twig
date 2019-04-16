@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+	<link rel="stylesheet" href={{asset('css/bootstrap.min.css')}}>
+	<link rel="stylesheet" href={{asset('css/style.css')}}>
+{% endblock %}
+{% block body %}
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-4">		
+			</div>
+			<div class="form-group col-sm-4">
+			<table class="table table-hover">
+			    <tr class="table-success">
+					<td><p>Votre compte a ete creer avec succes
+					Cliquer ici pour vous <a href="{{ path ('connecter') }}">identifier</p></td>
+			</tr>
+			</table> 
+	</div>
+	<div class="col-sm-4">
+	</div>
+		
+	</div>
+
+{% endblock %}
