@@ -175,9 +175,13 @@ class DefaultController extends Controller
       $formEtablissement->handleRequest($request);
       if ($formEtablissement->isSubmitted() && $formEtablissement->isValid()) {
           $activite=$formEtablissement->get('typeActivite')->getData();
+          $ville=$formEtablissement->get('ville')->getData();
           $cpt=0;
           $repository=$this->getDoctrine()->getRepository('AppBundle:Etablissement');
-          $list_activite=$repository->findByTypeActivite($activite);
+         /* $list_activite=$repository->findByTypeActivite($activite);
+          return $this->render('resultat.html.twig',array('list_activite' => $list_activite));*/
+          $list_activite=$repository->findAll();
+          return $this->render('resultat.html.twig',array('list_activite' => $list_activite,'activite'=>$activite,'ville'=>$ville));
       }      
       return $this->render('profil.html.twig',array('form' => $formEtablissement->createView()));
     }
