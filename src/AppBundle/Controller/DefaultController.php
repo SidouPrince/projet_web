@@ -27,6 +27,10 @@ class DefaultController extends Controller
     */
     public function devenirPartenaire(Request $request)
     {
+        $dejaExiste = 0;/*designer si un utilisateur existe déja
+                        * = 0 veut dire il n'existe pas !
+                        */
+
         // informations personnelles partenaires
         $partenaire = new Partenaire();
         $form = $this -> createFormBuilder($partenaire)
@@ -36,41 +40,31 @@ class DefaultController extends Controller
         ->add('telephone', NumberType::class)
         ->getForm();
 
-        //informations concernant letablissement
-        $etablissement = new Etablissement();
-        $formEtablissement = $this -> createFormBuilder($etablissement)
-        ->add('nomSociete')
-        ->add('typeActivite')
-        ->add('employes', NumberType::class)
-        ->add('rue')
-        ->add('codePostale', NumberType::class)
-        ->add('ville')
-        ->getForm();
-        $s = 1;
+        $repository = $this->getDoctrine()->getRepository(Partenaire::class);
+
         //traiter les infos qui sont envoyées par les forms
         $form->handleRequest($request);
         if ( $form->isSubmitted() && $form->isValid() ) {
-            $manager = $this->getDoctrine()->getManager();
-            $manager->persist($partenaire);
-            $manager->flush();
-            $s = 11;
-            
-        }
-        //traiter les infos qui sont envoyées etablissement
-        $formEtablissement->handleRequest($request);
-        dump($formEtablissement);
-            if ( $formEtablissement->isSubmitted() && $formEtablissement->isValid() ) {
+            $existePartenaire = $repository->findOneByEmail($partenaire->getEmail());
+            //s'il n'existe pas déja dans la base de données
+            if (!$existePartenaire) {
+                $partenaire->setPassword('default');
                 $manager = $this->getDoctrine()->getManager();
-                $manager->persist($etablissement);
+                $manager->persist($partenaire);
                 $manager->flush();
-                $s = 14;
-            }
-        
 
-        return $this->render('partenaire.html.twig', [
+                //on passe à l'étape suivante
+                return $this->redirectToRoute('partenaireEtablissement',[
+                    'idProprietaire' => $partenaire->getId()
+                ]);
+                
+            }else{
+                $dejaExiste = 1;
+            }    
+        }
+        return $this->render('partenaire1.html.twig', [
             'partenaire' => $form->createView(),
-            'formEtablissement' => $formEtablissement->createView(),
-            's' => $s 
+            'dejaExiste' => $dejaExiste
         ]);
     }
 }

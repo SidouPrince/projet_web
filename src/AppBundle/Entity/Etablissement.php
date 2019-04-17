@@ -63,6 +63,12 @@ class Etablissement
      */
     private $ville;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="idProprietaire", type="integer")
+     */
+    private $idProprietaire;
 
     /**
      * Get id
@@ -216,6 +222,30 @@ class Etablissement
     public function getVille()
     {
         return $this->ville;
+    }
+
+    /**
+     * Set idProprietaire
+     *
+     * @param integer $idProprietaire
+     *
+     * @return etablissement
+     */
+    public function setidProprietaire($idProprietaire)
+    {
+        $this->idProprietaire = $idProprietaire;
+
+        return $this;
+    }
+
+    /**
+     * Get idProprietaire
+     *
+     * @return int
+     */
+    public function idProprietaire()
+    {
+        return $this->idProprietaire;
     }
 }
 

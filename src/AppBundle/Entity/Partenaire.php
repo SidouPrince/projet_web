@@ -49,6 +49,13 @@ class Partenaire
      */
     private $telephone;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="password", type="string", length=50)
+     */
+    private $password;
+
 
     /**
      * Get id
@@ -154,6 +161,30 @@ class Partenaire
     public function getTelephone()
     {
         return $this->telephone;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     *
+     * @return partenaire
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
     }
 }
 
