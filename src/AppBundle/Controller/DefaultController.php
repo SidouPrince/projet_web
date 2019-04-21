@@ -36,11 +36,11 @@ class DefaultController extends Controller
   */
 
     public function connexion(Request $request){
-<<<<<<< HEAD
+
 
       return $this->render('connexion.html.twig');
     }
-=======
+
       
       $client=new Client();
       $partenaire=new Partenaire();
@@ -99,7 +99,7 @@ class DefaultController extends Controller
         return $this->render('connexion.html.twig',array('form' => $form->createView(),'form2'=>$form2->createView()));
       }
 
->>>>>>> 93758133cd8d3a4452d97ee84cac66159c288235
+
     /**
      * @Route("/inscription", name="inscrire")
      */
@@ -237,14 +237,12 @@ class DefaultController extends Controller
       return $this->render('profil.html.twig',array('form' => $formEtablissement1->createView(),'form2'=>$formEtablissement2->createView()));
     }
 
-<<<<<<< HEAD
     /**
     *@Route("/deconnexion", name="deconnexion")
     */
     public function deconnexion(){
       throw new \Exception('pour que ce controleur ne sera jamais executé !');
     }
-=======
  /**
   @Route("/connexion/profil/monprofil",name="monprofil")
   * 
@@ -254,5 +252,4 @@ class DefaultController extends Controller
     $list_utilisateur=$repository->findAll();
     return $this->render('informations.html.twig',array('list_utilisateur'=>$list_utilisateur,'email_utilisateur'=>'oussdiahmed@gmail.com'));
   }
->>>>>>> 93758133cd8d3a4452d97ee84cac66159c288235
 }

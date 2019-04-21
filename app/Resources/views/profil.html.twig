@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
-<<<<<<< HEAD
+
 	<link rel="stylesheet" href={{asset('css/bootstrap.min.css')}}>
  <link rel="stylesheet" href={{asset('css/style.css')}}>
   <link rel="stylesheet" href={{asset('css/jquery-ui.css')}}>    
@@ -8,14 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> 
-=======
+
   <link rel="stylesheet" href={{asset('css/bootstrap.min.css')}}>
->>>>>>> a42316b2fae579c3360c4776f2a34b647b859aa4
+
 {% endblock %}
 {% block body %}
   {% if is_granted("ROLE_ADMIN") %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-<<<<<<< HEAD
+
   <a class="navbar-brand" href="#">Beaute</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -94,7 +94,7 @@ function openCity(evt, cityName) {
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
 </script>
-=======
+
       <a class="navbar-brand" href="#">Beaute</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -137,5 +137,5 @@ document.getElementById("defaultOpen").click();
   {% else %}
    {{ render(path('connecter')) }}
   {% endif %}
->>>>>>> a42316b2fae579c3360c4776f2a34b647b859aa4
+
 {% endblock %}
