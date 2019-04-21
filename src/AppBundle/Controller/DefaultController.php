@@ -28,39 +28,71 @@ class DefaultController extends Controller
     public function indexAction () {
       return $this->render('home.html.twig');
     }
+
 /**
   @Route("/connexion",name="connecter")
   *
   */
 
     public function connexion(Request $request){
+      
       $client=new Client();
+      $partenaire=new Partenaire();
+      
       $form=$this->createFormBuilder($client)
       ->add('Email',EmailType::class)
       ->add('mot_de_passe',PasswordType::class)
              ->add('save', SubmitType::class, array('label' => 'Connecter'))
              ->getForm();
+      
+      $form2=$this->createFormBuilder($partenaire)
+      ->add('email',EmailType::class)
+      ->add('password',PasswordType::class)
+             ->add('save', SubmitType::class, array('label' => 'Connecter'))
+             ->getForm();
 
       $form->handleRequest($request);
+      $form2->handleRequest($request);
+      
       if ($form->isSubmitted() && $form->isValid()) {
         $email=$form->get('Email')->getData();
         $mdp=$form->get('mot_de_passe')->getData();
         $cpt=0;
-      $repository=$this->getDoctrine()->getRepository('AppBundle:Client');
-      $list_email=$repository->findAll();
-      for ($i=0; $i<count($list_email); $i++) { 
-        if(($list_email[$i]->getEmail()==$email)&&($list_email[$i]->getMotDePasse()==$mdp)){
-          $cpt++;
-          return $this->redirectToRoute('profil');   
+        $email_utilisateur=$email;
+        $repository=$this->getDoctrine()->getRepository('AppBundle:Client');
+        $list_email=$repository->findAll();
+        for ($i=0; $i<count($list_email); $i++) { 
+          if(($list_email[$i]->getEmail()==$email)&&($list_email[$i]->getMotDePasse()==$mdp)){
+            $cpt++;
+            return $this->redirectToRoute('profil',array('email'=>$email));   
+          }
+        }
+        if($cpt==0){
+          return $this->render('erreur_connexion.html.twig',array('form'=>$form->createView(),'form2'=>$form2->createView()));
+        //return $this->redirectToRoute('erreur');
         }
       }
-      if($cpt==0){
-        return $this->render('erreur_connexion.html.twig',array('form'=>$form->createView()));
+        elseif ($form2->isSubmitted() && $form2->isValid()) {
+        $email=$form2->get('email')->getData();
+        $mdp=$form2->get('password')->getData();
+        $cpt2=0;
+        $repository=$this->getDoctrine()->getRepository('AppBundle:Partenaire');
+        $list_email=$repository->findAll();
+        for ($i=0; $i<count($list_email); $i++) { 
+          if(($list_email[$i]->getEmail()==$email)&&($list_email[$i]->getPassword()==$mdp)){
+            $cpt2++;
+            return $this->redirectToRoute('profil');   
+          }
+        }
+        if($cpt2==0){
+          return $this->render('erreur_connexion.html.twig',array('form' => $form->createView(),'form2'=>$form2->createView()));
         //return $this->redirectToRoute('erreur');
+        }
       }
+
+        return $this->render('connexion.html.twig',array('form' => $form->createView(),'form2'=>$form2->createView()));
       }
-      return $this->render('connexion.html.twig',array('form' => $form->createView()));
-    }
+
     /**
      * @Route("/inscription", name="inscrire")
      */
@@ -70,12 +102,12 @@ class DefaultController extends Controller
       $poll = new Client();
 
       $form = $this->createFormBuilder($poll)
-	->add('Email',EmailType::class)
-	->add('Nom_de_famille',TextType::class)
-  ->add('Prenom',TextType::class)
-  ->add('mot_de_passe',PasswordType::class)
-  ->add('Code_postal',NumberType::class)
-  ->add('Sexe',ChoiceType::class,
+	  ->add('Email',EmailType::class)
+	  ->add('Nom_de_famille',TextType::class)
+    ->add('Prenom',TextType::class)
+    ->add('mot_de_passe',PasswordType::class)
+    ->add('Code_postal',NumberType::class)
+    ->add('Sexe',ChoiceType::class,
         array ('choices' => array ('Homme' => 1, 'Femme' => 0),
          'expanded' => true))
             ->add('save', SubmitType::class, array('label' => 'Rejoignez nous'))
@@ -83,8 +115,8 @@ class DefaultController extends Controller
 
       // tester si le formulaire est déjà rempli
       $form->handleRequest($request);
+      
       if ($form->isSubmitted() && $form->isValid()) {
-
           $email=$form->get('Email')->getData();
           $cpt=0;
           $repository=$this->getDoctrine()->getRepository('AppBundle:Client');
@@ -160,24 +192,52 @@ class DefaultController extends Controller
   */   
     public function monprofil(Request $request){
       $etablissement = new Etablissement();
-      $formEtablissement = $this -> createFormBuilder($etablissement)
+      $formEtablissement1 = $this -> createFormBuilder($etablissement)
       ->add('typeActivite',TextType::class)
-      ->add('ville',TextType::class)
+      ->add('codePostale',NumberType::class)
             ->add('save', SubmitType::class, array('label' => 'Recherche'))
             ->getForm();
+
+      $formEtablissement2 = $this -> createFormBuilder($etablissement)
+      ->add('nomSociete',TextType::class)
+            ->add('save', SubmitType::class, array('label' => 'Recherche'))
+            ->getForm();
+
+
 	 // tester si le formulaire est déjà rempli
-      $formEtablissement->handleRequest($request);
-      if ($formEtablissement->isSubmitted() && $formEtablissement->isValid()) {
-          $activite=$formEtablissement->get('typeActivite')->getData();
-          $ville=$formEtablissement->get('ville')->getData();
-          $cpt=0;
+      $formEtablissement1->handleRequest($request);
+      $formEtablissement2->handleRequest($request);
+      $choix=0;
+      if ($formEtablissement1->isSubmitted() && $formEtablissement1->isValid()) {
+          $activite=$formEtablissement1->get('typeActivite')->getData();
+          $code=$formEtablissement1->get('codePostale')->getData();
+          $choix++;
           $repository=$this->getDoctrine()->getRepository('AppBundle:Etablissement');
          /* $list_activite=$repository->findByTypeActivite($activite);
           return $this->render('resultat.html.twig',array('list_activite' => $list_activite));*/
           $list_activite=$repository->findAll();
-          return $this->render('resultat.html.twig',array('list_activite' => $list_activite,'activite'=>$activite,'ville'=>$ville));
-      }      
-      return $this->render('profil.html.twig',array('form' => $formEtablissement->createView()));
+          return $this->render('resultat.html.twig',array('list_activite' => $list_activite,
+            'activite'=>$activite,  'code'=>$code,'choix'=>$choix));
+      }
+      elseif($formEtablissement2->isSubmitted() && $formEtablissement2->isValid()){
+        $choix--;
+        $societe=$formEtablissement2->get('nomSociete')->getData();
+        $repository=$this->getDoctrine()->getRepository('AppBundle:Etablissement');
+        $list_societe=$repository->findAll();
+        return $this->render('resultat.html.twig',array('list_societe' => $list_societe,'societe'=>$societe,
+            'choix'=>$choix));
+      }
+      
+      return $this->render('profil.html.twig',array('form' => $formEtablissement1->createView(),'form2'=>$formEtablissement2->createView()));
     }
 
+ /**
+  @Route("/connexion/profil/monprofil",name="monprofil")
+  * 
+  */ public function mes_informations(Request $request){
+    $client=new Client();
+    $repository=$this->getDoctrine()->getRepository('AppBundle:Client');
+    $list_utilisateur=$repository->findAll();
+    return $this->render('informations.html.twig',array('list_utilisateur'=>$list_utilisateur,'email_utilisateur'=>'oussdiahmed@gmail.com'));
+  }
 }
