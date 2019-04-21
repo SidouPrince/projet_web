@@ -4,27 +4,37 @@
 	<link rel="stylesheet" href={{asset('css/style.css')}}>
 {% endblock %}
 {% block body %}
-
-<i><center><h1 class="text-muted">Connexion</h1></center></i>
-<div class='formulaire'>
-	
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-4">
+	<i><center><h1 class="text-muted">Connexion</h1></center></i>
+	<div class='formulaire'>
+		
+		<div class="container">
+			<div class="row">
+				<form method="post" action="{{ path('connecter') }}">
+					<legend><p class="text-muted" style="text-align: center;">Connexion !</p></legend>
+					<div class="form-group pass">
+						<label for="email">E-mail</label>
+						<input type="email" name="_username" class="form-control" id="email" placeholder="E-mail ... ">
+					</div>
+					<div class="form-group">
+						<label for="cPassword">Mot de passe </label>
+						<input type="password" name="_password" class="form-control" id="cpassword" placeholder="Mot de passe" >
+					</div>
+					<input type="submit" class="btn btn-outline-primary" id="btn_connexion" value="Se connecter"></input>
+				</form>
+				{# <div class="col-sm-4">
+					
+				</div> #}
+				{# <div class="form-group col-sm-4">
+					{{ form_start(form) }}
+					{{ form_row(form.Email, {'attr': {'placeholder': "Votre Email..",'class':'form-control','style':'100px'}}) }}
+					{{ form_row(form.mot_de_passe, {'attr': {'placeholder': "Votre Mot De Passe..",'class':'form-control'}}) }}
+					{{ form_row(form.save, {'attr': {'class':'btn btn-primary'}}) }}
+					{{ form_end(form) }}
+				</div> #}
+				{# <div class="col-sm-4">
+				</div> #}
 				
 			</div>
-			<div class="form-group col-sm-4">
-	{{ form_start(form) }}
-		{{ form_row(form.Email, {'attr': {'placeholder': "Votre Email..",'class':'form-control','style':'100px'}}) }}
-		{{ form_row(form.mot_de_passe, {'attr': {'placeholder': "Votre Mot De Passe..",'class':'form-control'}}) }}
-		{{ form_row(form.save, {'attr': {'class':'btn btn-primary'}}) }}
-	{{ form_end(form) }}
-	</div>
-	<div class="col-sm-4">
-	</div>
-		
-	</div>
-	
-</div>
-
-{% endblock %}
+			
+		</div>
+	{% endblock %}
