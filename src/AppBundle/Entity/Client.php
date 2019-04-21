@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Client
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="client")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ClientRepository")
  */
-class Client
+class Client implements UserInterface, \Serializable
 {
     /**
      * @var int
@@ -105,7 +106,7 @@ class Client
      *
      * @return Client
      */
-    public function setMotDePasse($motDePasse)
+    public function setPassword($motDePasse)
     {
         $this->motDePasse = $motDePasse;
 
@@ -117,7 +118,7 @@ class Client
      *
      * @return string
      */
-    public function getMotDePasse()
+    public function getPassword()
     {
         return $this->motDePasse;
     }
@@ -144,6 +145,16 @@ class Client
     public function getPrenom()
     {
         return $this->prenom;
+    }
+
+    /**
+     * Get username
+     *
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->email;
     }
 
     /**
@@ -217,5 +228,47 @@ class Client
     {
         return $this->sexe;
     }
+
+    public function getRoles()
+    {
+        return ['ROLE_USER'];
+    }
+
+    public function eraseCredentials()
+    {
+    }
+
+    /** @see \Serializable::serialize() */
+    public function serialize()
+    {
+        return serialize([
+            $this->id,
+            $this->email,
+            $this->motDePasse,
+            // see section on salt below
+            // $this->salt,
+        ]);
+    }
+
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->email,
+            $this->motDePasse,
+            // see section on salt below
+            // $this->salt
+        ) = unserialize($serialized, ['allowed_classes' => false]);
+    }
+
+     public function getSalt()
+    {
+        // you *may* need a real salt depending on your encoder
+        // see section on salt below
+        return null;
+    }
+
 }
+
 
