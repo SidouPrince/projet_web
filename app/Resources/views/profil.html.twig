@@ -1,6 +1,12 @@
 {% extends 'base.html.twig' %}
 {% block stylesheets %}
 	<link rel="stylesheet" href={{asset('css/bootstrap.min.css')}}>
+ <link rel="stylesheet" href={{asset('css/style.css')}}>
+  <link rel="stylesheet" href={{asset('css/jquery-ui.css')}}>    
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> 
 {% endblock %}
 {% block body %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -15,7 +21,7 @@
         <a class="nav-link" href="#">Mes Reservation <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">hhh</a>
+        <a class="nav-link" href="{{path('monprofil')}}">Mon Profil</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Connexion</a>
@@ -30,18 +36,56 @@
     </form>
   </div>
 </nav>
+
 <div class="container">
-<div class="row">
-      <div class="col-sm-6">
-          {{ form_start(form) }}
-            {{ form_row(form.typeActivite, {'attr': {'placeholder': "Recherche par prestation",'class':'form-control'}}) }}
-            {{ form_row(form.ville, {'attr': {'placeholder': "Ville ou code postal",'class':'form-control'}}) }}
-            {{ form_row(form.save, {'attr': {'class':'btn btn-primary'}}) }}
-          {{ form_end(form) }}
-      </div>
-      <div class="col-sm-6">
+    <div class="row">
+      <div class="col-sm-4">
         
       </div>
-    </div>
+      <div class="col-sm-4">
+      <legend><p class="text-muted" style="text-align: center;">Connexion</p></legend>
+      <div class="tab">
+        <button class="tablinks" onclick="openCity(event, 'Client')" id="defaultOpen">Prestation</button>
+        <button class="tablinks" onclick="openCity(event, 'Partenaire')">Etablissement</button>
+      </div>
+
+      <div id="Client" class="tabcontent">
+        
+            {{ form_start(form) }}
+              {{ form_row(form.typeActivite, {'attr': {'placeholder': "Prestation",'class':'form-control','style':'100px'}}) }}
+              {{ form_row(form.codePostale, {'attr': {'placeholder': "Code postal",'class':'form-control'}}) }}
+              {{ form_row(form.save, {'attr': {'class':'btn btn-primary'}}) }}
+            {{ form_end(form) }} 
+      </div>
+      <div id="Partenaire" class="tabcontent">
+            {{ form_start(form2) }}
+              {{ form_row(form2.nomSociete, {'attr': {'placeholder': "Nom Societe",'class':'form-control','style':'100px'}}) }}
+              {{ form_row(form2.save, {'attr': {'class':'btn btn-primary'}}) }}
+            {{ form_end(form2) }} 
+       </div> 
+      </div>
+      <div class="col-sm-4">
+        
+      </div>            
   </div>
+</div>
+
+<script>
+function openCity(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
 {% endblock %}
