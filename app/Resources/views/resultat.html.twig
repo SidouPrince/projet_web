@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+	<link rel="stylesheet" href={{asset('css/bootstrap.min.css')}}>
+	<link rel="stylesheet" href={{asset('css/style.css')}}>
+{% endblock %}
+{% block body %}
+
+	{% if choix<0 %}
+		{% for i in list_societe %}
+			{%if i.nomSociete==societe %}
+			<ul>
+				<li>{{ i.nomSociete }}</li>
+				<li>{{ i.rue }}</li>
+			</ul>
+			{%endif%}
+		{% endfor %}
+	{%endif%}
+	
+	{% if choix>0 %}
+		{% for i in list_activite %}
+			{% if i.typeActivite==activite and i.codePostale==code %}
+			<ul>
+				<li>{{ i.nomSociete }}</li>
+				<li>{{ i.rue }}</li>
+			</ul>
+			{%endif%}
+		{% endfor %}
+	{%endif%}
+
+{% endblock %}
