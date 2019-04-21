@@ -22,6 +22,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DefaultController extends Controller
 {
+  
     /**
     * @Route("/", name="homepage")
     */
@@ -34,32 +35,8 @@ class DefaultController extends Controller
   */
 
     public function connexion(Request $request){
-      $client=new Client();
-      $form=$this->createFormBuilder($client)
-      ->add('Email',EmailType::class)
-      ->add('mot_de_passe',PasswordType::class)
-             ->add('save', SubmitType::class, array('label' => 'Connecter'))
-             ->getForm();
 
-      $form->handleRequest($request);
-      if ($form->isSubmitted() && $form->isValid()) {
-        $email=$form->get('Email')->getData();
-        $mdp=$form->get('mot_de_passe')->getData();
-        $cpt=0;
-      $repository=$this->getDoctrine()->getRepository('AppBundle:Client');
-      $list_email=$repository->findAll();
-      for ($i=0; $i<count($list_email); $i++) { 
-        if(($list_email[$i]->getEmail()==$email)&&($list_email[$i]->getMotDePasse()==$mdp)){
-          $cpt++;
-          return $this->redirectToRoute('profil');   
-        }
-      }
-      if($cpt==0){
-        return $this->render('erreur_connexion.html.twig',array('form'=>$form->createView()));
-        //return $this->redirectToRoute('erreur');
-      }
-      }
-      return $this->render('connexion.html.twig',array('form' => $form->createView()));
+      return $this->render('connexion.html.twig');
     }
     /**
      * @Route("/inscription", name="inscrire")
@@ -154,10 +131,9 @@ class DefaultController extends Controller
             'dejaExiste' => $dejaExiste
         ]);
     }
- /**
-  @Route("/connexion/profil",name="profil")
-  * 
-  */   
+    /**
+    *@Route("/profil", name="profil")
+    */
     public function monprofil(Request $request){
       $etablissement = new Etablissement();
       $formEtablissement = $this -> createFormBuilder($etablissement)
@@ -180,4 +156,10 @@ class DefaultController extends Controller
       return $this->render('profil.html.twig',array('form' => $formEtablissement->createView()));
     }
 
+    /**
+    *@Route("/deconnexion", name="deconnexion")
+    */
+    public function deconnexion(){
+      throw new \Exception('pour que ce controleur ne sera jamais executé !');
+    }
 }
