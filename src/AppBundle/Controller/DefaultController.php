@@ -34,69 +34,8 @@ class DefaultController extends Controller
   @Route("/connexion",name="connecter")
   *
   */
-
     public function connexion(Request $request){
-
-
-      return $this->render('connexion.html.twig');
-    }
-
-      
-      $client=new Client();
-      $partenaire=new Partenaire();
-      
-      $form=$this->createFormBuilder($client)
-      ->add('Email',EmailType::class)
-      ->add('mot_de_passe',PasswordType::class)
-             ->add('save', SubmitType::class, array('label' => 'Connecter'))
-             ->getForm();
-      
-      $form2=$this->createFormBuilder($partenaire)
-      ->add('email',EmailType::class)
-      ->add('password',PasswordType::class)
-             ->add('save', SubmitType::class, array('label' => 'Connecter'))
-             ->getForm();
-
-      $form->handleRequest($request);
-      $form2->handleRequest($request);
-      
-      if ($form->isSubmitted() && $form->isValid()) {
-        $email=$form->get('Email')->getData();
-        $mdp=$form->get('mot_de_passe')->getData();
-        $cpt=0;
-        $email_utilisateur=$email;
-        $repository=$this->getDoctrine()->getRepository('AppBundle:Client');
-        $list_email=$repository->findAll();
-        for ($i=0; $i<count($list_email); $i++) { 
-          if(($list_email[$i]->getEmail()==$email)&&($list_email[$i]->getMotDePasse()==$mdp)){
-            $cpt++;
-            return $this->redirectToRoute('profil',array('email'=>$email));   
-          }
-        }
-        if($cpt==0){
-          return $this->render('erreur_connexion.html.twig',array('form'=>$form->createView(),'form2'=>$form2->createView()));
-        //return $this->redirectToRoute('erreur');
-        }
-      }
-        elseif ($form2->isSubmitted() && $form2->isValid()) {
-        $email=$form2->get('email')->getData();
-        $mdp=$form2->get('password')->getData();
-        $cpt2=0;
-        $repository=$this->getDoctrine()->getRepository('AppBundle:Partenaire');
-        $list_email=$repository->findAll();
-        for ($i=0; $i<count($list_email); $i++) { 
-          if(($list_email[$i]->getEmail()==$email)&&($list_email[$i]->getPassword()==$mdp)){
-            $cpt2++;
-            return $this->redirectToRoute('profil');   
-          }
-        }
-        if($cpt2==0){
-          return $this->render('erreur_connexion.html.twig',array('form' => $form->createView(),'form2'=>$form2->createView()));
-        //return $this->redirectToRoute('erreur');
-        }
-      }
-
-        return $this->render('connexion.html.twig',array('form' => $form->createView(),'form2'=>$form2->createView()));
+      return $this->render('connexion.html.twig');    
       }
 
 
@@ -156,7 +95,6 @@ class DefaultController extends Controller
         $dejaExiste = 0;/*designer si un utilisateur existe déja
                         * = 0 veut dire il n'existe pas !
                         */
-
         // informations personnelles partenaires
         $partenaire = new Partenaire();
         $form = $this -> createFormBuilder($partenaire)

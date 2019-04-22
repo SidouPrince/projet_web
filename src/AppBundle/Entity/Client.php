@@ -100,7 +100,7 @@ class Client implements UserInterface, \Serializable
     }
 
     /**
-     * Set motDePasse
+     * Set Passowrd
      *
      * @param string $motDePasse
      *
@@ -112,9 +112,8 @@ class Client implements UserInterface, \Serializable
 
         return $this;
     }
-
     /**
-     * Get motDePasse
+     * Get Password
      *
      * @return string
      */
@@ -123,6 +122,30 @@ class Client implements UserInterface, \Serializable
         return $this->motDePasse;
     }
 
+    /**
+     * Set motDePasse
+     *
+     * @param string $motDePasse
+     *
+     * @return Client
+     */
+    public function setMotDePasse($motDePasse)
+    {
+        $this->motDePasse = $motDePasse;
+
+        return $this;
+    }
+
+    /**
+     * Get motDePasse
+     *
+     * @return string
+     */
+    public function getMotDePasse()
+    {
+        return $this->motDePasse;
+    }
+    
     /**
      * Set prenom
      *
