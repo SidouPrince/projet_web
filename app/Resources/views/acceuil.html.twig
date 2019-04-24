@@ -6,8 +6,7 @@
   <link rel="stylesheet" href={{asset('css/jquery-ui.css')}}>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  
   <link rel="stylesheet" href={{asset('css/bootstrap.min.css')}}>
 {% endblock %}
 {% block body %}
@@ -20,25 +19,22 @@
       <div class="collapse navbar-collapse" id="navbarColor01">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Mes Reservation <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="">Acceuil <span class="sr-only">(current)</span></a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{path('monprofil')}}">Mon Profil</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Connexion</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
+          
+          <li class="nav-item ">
+            <a class="nav-link" href="{{ path('profilePartenaire') }}">Mon profil <span class="sr-only">(current)</span></a>
           </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search">
-          <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-        </form>
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('deconnexion') }}">Déconnecxion</a>
+          </li>
+        </ul>
+        
       </div>
     </nav>
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
         <div class="col-sm-4">
           <legend><p class="text-muted" style="text-align: center;">Recherche</p></legend>
@@ -49,64 +45,52 @@
           <div id="Client" class="tabcontent">
             
             {{ form_start(form) }}
-            {{ form_row(form.typeActivite, {'attr': {'placeholder': "Prestation",'class':'form-control','style':'100px'}}) }}
-            {{ form_row(form.codePostale, {'attr': {'placeholder': "Code postal",'class':'form-control'}}) }}
-            {{ form_row(form.save, {'attr': {'class':'btn btn-primary'}}) }}
+            <div class="form-group">
+              <label for="selection">Préstation </label>
+              <select class="form-control" id="selection" name="select">
+                <option>Coiffure</option>
+                <option>Visage</option>
+                <option>Massage</option>
+                <option>Corps</option>
+              </select>
+            </div>
+            {{ form_row(form.codePostale, {'attr': {'placeholder' : 'Code postale', 'class':'form-control'}}) }}
+            {{ form_row(form.save, {'attr': {'class':'btn btn-primary', 'style':"margin-top:10px;"}}) }}
             {{ form_end(form) }}
           </div>
           <div id="Partenaire" class="tabcontent">
             {{ form_start(form2) }}
             {{ form_row(form2.nomSociete, {'attr': {'placeholder': "Nom Societe",'class':'form-control','style':'100px'}}) }}
-            {{ form_row(form2.save, {'attr': {'class':'btn btn-primary'}}) }}
+            {{ form_row(form2.save, {'attr': {'class':'btn btn-primary', 'style':"margin-top:10px;"}}) }}
             {{ form_end(form2) }}
           </div>
         </div>
-        {# #######################Debut resultat d'une recherche################ #}
-        <div class="col-sm-8   register-form" style="margin-top: 10px;">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-sm-6" >
-                <img src="http://placehold.it/700x500" class="img-fluid" alt="Responsive image">
-              </div>
-              {# pour afficher le nom de la boutique ! #}
-              <div class="col-sm-4">
-                <p class="lead">Nom de la société</p>
-                <p class="text-muted"> à 2.4km de chez vous !</p>
-                <p class="text-muted">2 allée des spoutniks, 93700 Drancy</p>
-                <button type="button" class="btn btn-outline-warning">lire la suite ..</button>
-              </div>
-            </div>
-            <div class="row" style="margin-top:20px;">
-              <table class="table table-hover">
-                <tbody>
-                  <tr class="table-active">
-                    <th scope="row">Service 1</th>
-                    <td></td>
-                    <td></td>
-                    <td>20 euro</td>
-                    
-                  </tr>
-                  <tr>
-                    <th scope="row">Service 2</th>
-                    <td></td>
-                    <td></td>
-                    <td>à partir de 15 euros</td>
-                    
-                  </tr>
-                   <tr class="table-active">
-                    <th scope="row">Service 3</th>
-                    <td></td>
-                    <td></td>
-                    <td>30 euros</td>
-                    
-                  </tr>
-                </tbody>
-              </table>
+        {% if  resultat is defined and resultat|length > 0  %}
+          
+          {# #######################Debut resultat d'une recherche################ #}
+          <div class="col-sm-8" style="margin-top: 10px;">
+            <div class="container-fluid">
+              {% for r in resultat %}
+                <div class="register-form"  style="margin-bottom:10px;">
+                  <div class="row">
+                    <div class="col-sm-6" >
+                      <img src="http://placehold.it/700x500" class="img-fluid" alt="Responsive image">
+                    </div>
+                    {# pour afficher le nom de la boutique ! #}
+                    <div class="col-sm-4">
+                      <p class="lead">{{r.nomSociete}}</p>
+                      <p class="text-muted"> {{r.ville}} </p>
+                      <p class="text-muted">{{r.rue}}</p>
+                      <button type="button" class="btn btn-outline-warning">lire la suite ..</button>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
             </div>
           </div>
-        </div>
-        {# #######################Fin resultat d'une recherche################ #}
-        
+          {# #######################Fin resultat d'une recherche################ #}
+          
+        {% endif %}
       </div>
     </div>
     <script>
@@ -154,7 +138,6 @@
     <div class="row">
       <div class="col-sm-6">
         {{ form_start(form) }}
-        {{ form_row(form.typeActivite, {'attr': {'placeholder': "Recherche par prestation",'class':'form-control'}}) }}
         {{ form_row(form.save, {'attr': {'class':'btn btn-primary'}}) }}
         {{ form_end(form) }}
       </div>

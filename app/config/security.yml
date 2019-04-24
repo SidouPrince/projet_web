@@ -26,7 +26,7 @@ security:
             form_login:
                 login_path: connecter
                 check_path: connecter
-                default_target_path: profil
+                default_target_path: acceuil
                 always_use_default_target_path : true
             logout:
                 path:   deconnexion

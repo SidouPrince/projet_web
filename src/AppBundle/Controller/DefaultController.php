@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use AppBundle\Entity\Partenaire;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Etablissement;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -18,6 +19,8 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use AppBundle\Entity\imageEtablissement;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 
 class DefaultController extends Controller
@@ -132,12 +135,11 @@ class DefaultController extends Controller
         ]);
     }
     /**
-    *@Route("/profil", name="profil")
+    *@Route("/acceuil", name="acceuil")
     */
     public function monprofil(Request $request){
       $etablissement = new Etablissement();
       $formEtablissement1 = $this -> createFormBuilder($etablissement)
-      ->add('typeActivite',TextType::class)
       ->add('codePostale',NumberType::class)
             ->add('save', SubmitType::class, array('label' => 'Recherche'))
             ->getForm();
@@ -151,28 +153,36 @@ class DefaultController extends Controller
 	 // tester si le formulaire est déjà rempli
       $formEtablissement1->handleRequest($request);
       $formEtablissement2->handleRequest($request);
-      $choix=0;
-      if ($formEtablissement1->isSubmitted() && $formEtablissement1->isValid()) {
-          $activite=$formEtablissement1->get('typeActivite')->getData();
-          $code=$formEtablissement1->get('codePostale')->getData();
-          $choix++;
+      $choix = 0;
+
+      if ( $formEtablissement1->isSubmitted() && $formEtablissement1->isValid() ) {
+
+          $activite = $request->request->get('select');//recuperer le type de l'activité
+        
+          $code = $formEtablissement1->get('codePostale')->getData();
+
           $repository=$this->getDoctrine()->getRepository('AppBundle:Etablissement');
-         /* $list_activite=$repository->findByTypeActivite($activite);
-          return $this->render('resultat.html.twig',array('list_activite' => $list_activite));*/
-          $list_activite=$repository->findAll();
-          return $this->render('resultat.html.twig',array('list_activite' => $list_activite,
-            'activite'=>$activite,  'code'=>$code,'choix'=>$choix));
+          $list_activite=$repository->findBy(
+              array('typeActivite' => $activite, 'codePostale' => $code));
+          /*return $this->render('resultat.html.twig',array('list_activite' => $list_activite));*/
+          //$list_activite=$repository->findAll();
+          return $this->render('acceuil.html.twig',array('form' => $formEtablissement1->createView(),
+            'resultat' => $list_activite,
+            'form2'=>$formEtablissement2->createView()
+          ));
       }
-      elseif($formEtablissement2->isSubmitted() && $formEtablissement2->isValid()){
-        $choix--;
-        $societe=$formEtablissement2->get('nomSociete')->getData();
-        $repository=$this->getDoctrine()->getRepository('AppBundle:Etablissement');
-        $list_societe=$repository->findAll();
-        return $this->render('resultat.html.twig',array('list_societe' => $list_societe,'societe'=>$societe,
-            'choix'=>$choix));
+      elseif($formEtablissement2 -> isSubmitted() && $formEtablissement2 -> isValid()){
+        $societe = $formEtablissement2 -> get('nomSociete') -> getData();
+        $repository = $this->getDoctrine()->getRepository('AppBundle:Etablissement');
+        $list_societe = $repository->findByNomSociete($societe);
+        return $this->render('acceuil.html.twig',array('form' => $formEtablissement1->createView(),
+            'resultat' => $list_societe,
+            'form2'=>$formEtablissement2->createView()
+          ));
       }
       
-      return $this->render('profil.html.twig',array('form' => $formEtablissement1->createView(),'form2'=>$formEtablissement2->createView()));
+      return $this->render('acceuil.html.twig',array('form' => $formEtablissement1->createView(),'form2'=>$formEtablissement2->createView()
+    ));
     }
 
     /**
@@ -182,12 +192,34 @@ class DefaultController extends Controller
       throw new \Exception('pour que ce controleur ne sera jamais executé !');
     }
  /**
-  @Route("/connexion/profil/monprofil",name="monprofil")
+  @Route("/profil-partenaire",name="profilePartenaire")
   * 
   */ public function mes_informations(Request $request){
-    $client=new Client();
-    $repository=$this->getDoctrine()->getRepository('AppBundle:Client');
-    $list_utilisateur=$repository->findAll();
-    return $this->render('informations.html.twig',array('list_utilisateur'=>$list_utilisateur,'email_utilisateur'=>'oussdiahmed@gmail.com'));
+      $image = new imageEtablissement();
+      
+      $form = $this -> createFormBuilder($image)
+      ->add('nomImage',FileType::class)
+      ->add('save', SubmitType::class, array('label' => 'upload'))
+      ->getForm();
+      $utilisateur = $this->getUser();
+       $form->handleRequest($request);
+        if ( $form->isSubmitted() && $form->isValid() ) {
+          $file = $image->getNomImage();
+          $fileName = $file->getClientOriginalName();
+          $file -> move(
+            $this->getParameter('image_directory'),
+            $fileName
+          );
+           $manager = $this->getDoctrine()->getManager();
+           $image->setProprietaire($utilisateur->getId());
+           $image -> setNomImage($fileName);
+      
+           $manager->persist($image);
+           $manager->flush();
+        }
+    
+    return $this->render('profilPartenaire.html.twig',array(
+      'form' => $form->createView()
+    ));
   }
 }
