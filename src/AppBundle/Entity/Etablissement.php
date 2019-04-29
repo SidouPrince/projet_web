@@ -45,6 +45,13 @@ class Etablissement
     /**
      * @var string
      *
+     * @ORM\Column(name="imagePrincipale", type="string", length=255)
+     */
+    private $imagePrincipale;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="rue", type="string", length=30)
      */
     private $rue;
@@ -246,6 +253,30 @@ class Etablissement
     public function idProprietaire()
     {
         return $this->idProprietaire;
+    }
+
+    /**
+     * Set imagePrincipale
+     *
+     * @param string $imagePrincipale
+     *
+     * @return imageEtablissement
+     */
+    public function setImagePrincipale($imagePrincipale)
+    {
+        $this->imagePrincipale = $imagePrincipale;
+
+        return $this;
+    }
+
+    /**
+     * Get imagePrincipale
+     *
+     * @return string
+     */
+    public function getImagePrincipale()
+    {
+        return $this->imagePrincipale;
     }
 }
 

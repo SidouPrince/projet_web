@@ -10,7 +10,6 @@
   <link rel="stylesheet" href={{asset('css/bootstrap.min.css')}}>
 {% endblock %}
 {% block body %}
-  {% if is_granted("ROLE_USER") %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <a class="navbar-brand" href="#">Beaute</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,7 +88,6 @@
             </div>
           </div>
           {# #######################Fin resultat d'une recherche################ #}
-          
         {% endif %}
       </div>
     </div>
@@ -146,7 +144,4 @@
       </div>
     </div>
   </div>
-{% else %}
-  {{ render(path('connecter')) }}
-{% endif %}
 {% endblock %}

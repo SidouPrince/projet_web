@@ -35,7 +35,9 @@ class EtablissementController extends Controller{
                 //si un nom pareil existe pas dans la bdd
                 if (!$existeEtablissement) {
                     $etablissement->setidProprietaire($idProprietaire);
+                    $etablissement->setImagePrincipale('default.jpeg');
                     $manager = $this->getDoctrine()->getManager();
+
                     $manager->persist($etablissement);
                     $manager->flush();
                     return $this->redirectToRoute('initPassword', [

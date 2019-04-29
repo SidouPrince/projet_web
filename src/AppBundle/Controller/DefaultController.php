@@ -25,7 +25,6 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class DefaultController extends Controller
 {
-  
     /**
     * @Route("/", name="homepage")
     */
@@ -34,14 +33,78 @@ class DefaultController extends Controller
     }
 
 /**
-  @Route("/connexion",name="connecter")
+  @Route("/login",name="login")
   *
   */
     public function connexion(Request $request){
-      return $this->render('connexion.html.twig');    
+      $client = new Client();
+      $partenaire = new Partenaire();
+      $noUser = 0;
+
+      $formClient = $this -> createFormBuilder($client)
+      ->add('email')
+      ->add('motDePasse', PasswordType::class)
+      ->add('save', SubmitType::class, array('label' => 'Se connecter'))
+      ->getForm();
+
+      $formPartenaire = $this -> createFormBuilder($partenaire)
+      ->add('email')
+      ->add('password', PasswordType::class)
+      ->add('save', SubmitType::class, array('label' => 'Sidentifier'))
+      ->getForm();
+
+      $formClient->handleRequest($request);
+      //si le formClient est soumité
+      if ( $formClient->isSubmitted() && $formClient->isValid() ) {
+          $email = $formClient->get('email')->getData();
+          $mdp = $formClient->get('motDePasse')->getData();
+          
+          $repository=$this->getDoctrine()->getRepository('AppBundle:Client');
+          $utilisateur = $repository->findBy(
+              array('email' => $email, 'motDePasse' => $mdp));
+          if ( $utilisateur ) {
+            $session = $request ->getSession();
+            $session->set('email', $email);
+            $session->set('id', $utilisateur[0]->getId());
+            $session->set('role', 'ROLE_CLIENT');
+            return $this-> redirectToRoute('acceuil');
+          }else
+          {
+            $noUser = 1;
+          }
+
+      }
+      $formPartenaire->handleRequest($request);
+      if ( $formPartenaire->isSubmitted() && $formPartenaire->isValid() ) {
+          $email = $formPartenaire->get('email')->getData();
+          $mdp = $formPartenaire->get('password')->getData();
+
+          $repository=$this->getDoctrine()->getRepository('AppBundle:Partenaire');
+          $partenaire = $repository->findBy(
+              array('email' => $email, 'password' => $mdp));
+          if ( $partenaire ) {
+            $session = $request ->getSession();
+            $session->set('email', $email);
+            $session->set('id', $partenaire[0]->getId());
+            $session->set('role', 'ROLE_PARTENAIRE');
+            return $this-> redirectToRoute('profilePartenaire');
+          }else
+          {
+            $noUser = 1;
+          }
       }
 
+      //Si le formPartenaire est validé
 
+      return $this->render('login.html.twig', [
+        'formClient' => $formClient->createView(),
+        'formPartenaire' => $formPartenaire->createView(),
+        'noUser' => $noUser
+      ]);    
+
+      }
+
+     
     /**
      * @Route("/inscription", name="inscrire")
      */
@@ -137,12 +200,15 @@ class DefaultController extends Controller
     /**
     *@Route("/acceuil", name="acceuil")
     */
-    public function monprofil(Request $request){
-      $etablissement = new Etablissement();
+    public function acceuil(Request $request){
+      $session = $request ->getSession();
+      
+      if ( $session->get('role') == "ROLE_CLIENT" ) {
+        $etablissement = new Etablissement();
       $formEtablissement1 = $this -> createFormBuilder($etablissement)
       ->add('codePostale',NumberType::class)
-            ->add('save', SubmitType::class, array('label' => 'Recherche'))
-            ->getForm();
+      ->add('save', SubmitType::class, array('label' => 'Recherche'))
+      ->getForm();
 
       $formEtablissement2 = $this -> createFormBuilder($etablissement)
       ->add('nomSociete',TextType::class)
@@ -150,7 +216,7 @@ class DefaultController extends Controller
             ->getForm();
 
 
-	 // tester si le formulaire est déjà rempli
+   // tester si le formulaire est déjà rempli
       $formEtablissement1->handleRequest($request);
       $formEtablissement2->handleRequest($request);
       $choix = 0;
@@ -161,7 +227,7 @@ class DefaultController extends Controller
         
           $code = $formEtablissement1->get('codePostale')->getData();
 
-          $repository=$this->getDoctrine()->getRepository('AppBundle:Etablissement');
+           $repository=$this->getDoctrine()->getRepository('AppBundle:Etablissement');
           $list_activite=$repository->findBy(
               array('typeActivite' => $activite, 'codePostale' => $code));
           /*return $this->render('resultat.html.twig',array('list_activite' => $list_activite));*/
@@ -183,43 +249,74 @@ class DefaultController extends Controller
       
       return $this->render('acceuil.html.twig',array('form' => $formEtablissement1->createView(),'form2'=>$formEtablissement2->createView()
     ));
+      }else{
+        return $this->redirectToRoute('login');
+      }
     }
 
     /**
     *@Route("/deconnexion", name="deconnexion")
     */
-    public function deconnexion(){
-      throw new \Exception('pour que ce controleur ne sera jamais executé !');
+    public function deconnexion(Request $request){
+      $session = $request ->getSession();
+      
+      $session->invalidate();
+      return $this->redirectToRoute('login');
+     
     }
  /**
   @Route("/profil-partenaire",name="profilePartenaire")
   * 
   */ public function mes_informations(Request $request){
-      $image = new imageEtablissement();
+      $session = $request->getSession();
+      if ( $session ->get('role') == 'ROLE_PARTENAIRE' ) {
+          $image = new imageEtablissement();
       
       $form = $this -> createFormBuilder($image)
       ->add('nomImage',FileType::class)
-      ->add('save', SubmitType::class, array('label' => 'upload'))
+      ->add('save', SubmitType::class, array('label' => 'Charger'))
       ->getForm();
-      $utilisateur = $this->getUser();
+
+      //rechrecher les etablissements que ce partenaire est proprietaire
+      $repository=$this->getDoctrine()->getRepository('AppBundle:Etablissement');
+              $listeEtablissement = $repository->findBy(
+              array('idProprietaire' => $session->get('id')));
+
        $form->handleRequest($request);
         if ( $form->isSubmitted() && $form->isValid() ) {
+        
+
           $file = $image->getNomImage();
           $fileName = $file->getClientOriginalName();
           $file -> move(
             $this->getParameter('image_directory'),
             $fileName
           );
-           $manager = $this->getDoctrine()->getManager();
-           $image->setProprietaire($utilisateur->getId());
+          $manager = $this->getDoctrine()->getManager();
+          if ( $request ->request->get('principale') == "ok" ) {
+              $repository=$this->getDoctrine()->getRepository('AppBundle:Etablissement');
+              dump($request->request->get('select'));
+              $nomEtablissement = $repository->findBy(
+              array('nomSociete' => $request->request->get('select')));
+              dump($nomEtablissement);
+              $nomEtablissement[0]->setImagePrincipale($fileName);
+              $manager->persist($nomEtablissement[0]);
+              $manager->flush();
+          }else{
+           
+           $image->setProprietaire($session->get('id'));
            $image -> setNomImage($fileName);
-      
            $manager->persist($image);
            $manager->flush();
         }
-    
+    }
     return $this->render('profilPartenaire.html.twig',array(
-      'form' => $form->createView()
+      'form' => $form->createView(),
+      'listeEtablissement' => $listeEtablissement
     ));
+  }else{
+    return $this->redirectToRoute('login');
+  }      
+      }    
   }
-}
+

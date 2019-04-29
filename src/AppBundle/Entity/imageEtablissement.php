@@ -84,6 +84,11 @@ class imageEtablissement
         return $this;
     }
 
+    /**
+     * Get nomImage
+     *
+     * @return string
+     */
     public function getNomImage()
     {
         return $this->nomImage;

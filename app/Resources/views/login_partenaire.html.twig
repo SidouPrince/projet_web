@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+  <link rel="stylesheet" href={{asset('css/bootstrap.min.css')}}>
+  <link rel="stylesheet" href={{asset('css/style.css')}}>
+  <link rel="stylesheet" href={{asset('css/jquery-ui.css')}}>
+  <link rel="stylesheet" href={{asset('css/partenaire.css')}}>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+{% endblock %}
+{% block javascripts %}
+  <script type="text/javascript" src="{{ asset('js/connexion.js') }}"></script>
+{% endblock %}
+{% block body %}
+  <div class="container-fluid">
+    <div class="row">
+      {# ******************************************************************************* #}
+      <div class="col-sm-4">
+        <legend><p class="text-muted" style="text-align: center;">Connexion !</p></legend>
+        
+        <div class="tab">
+          <button class="tablinks" onclick="openCity(event, 'Client')" id="defaultOpen">Partenaire</button>
+        </div>
+        <div id="Client" class="tabcontent">
+          <form method="post" action="{{ path('connecter_partenaire') }}">
+            <div class="form-group pass">
+              <label for="email">E-mail</label>
+              <input type="email" name="_username" class="form-control" id="email" placeholder="E-mail ... ">
+            </div>
+            <div class="form-group">
+              <label for="cPassword">Mot de passe </label>
+              <input type="password" name="_password" class="form-control" id="cpassword" placeholder="Mot de passe" >
+            </div>
+            <input type="submit" class="btn btn-outline-primary" id="btn_connexion" value="S'identier"></input>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+    {# ******************************************************************************* #}
+  {% endblock %}

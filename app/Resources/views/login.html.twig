@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+  <link rel="stylesheet" href={{asset('css/bootstrap.min.css')}}>
+  <link rel="stylesheet" href={{asset('css/style.css')}}>
+  <link rel="stylesheet" href={{asset('css/jquery-ui.css')}}>
+  <link rel="stylesheet" href={{asset('css/partenaire.css')}}>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+{% endblock %}
+{% block javascripts %}
+  <script type="text/javascript" src="{{ asset('js/script.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('js/connexion.js') }}"></script>
+{% endblock %}
+{% block body %}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-4">
+        <legend><p class="text-muted" style="text-align: center;">Connexion</p></legend>
+
+        <div class="alert alert-dismissible alert-danger" id="authentificationError">
+          <input type="hidden" value="{{ noUser }}" id="dejaExiste">
+          <strong>Oh mince !</strong> Erreur d'authentification !
+        </div>
+
+        <div class="tab">
+          <button class="tablinks" onclick="openCity(event, 'Client')" id="defaultOpen">Client</button>
+          <button class="tablinks" onclick="openCity(event, 'Partenaire')">Partenaire</button>
+        </div>
+        <div id="Client" class="tabcontent">
+          
+          {{ form_start(formClient) }}
+          {{ form_row(formClient.email, {'attr': {'placeholder' : 'votre email', 'class':'form-control'}}) }}
+          {{ form_row(formClient.motDePasse, {'attr': {'placeholder': 'votre mot de passe', 'class':'form-control'}}) }}
+          {{ form_row(formClient.save, {'attr': {'class':'btn btn-primary', 'style':"margin-top:10px;"}}) }}
+          {{ form_end(formClient) }}
+        </div>
+        <div id="Partenaire" class="tabcontent">
+          {{ form_start(formPartenaire) }}
+          {{ form_row(formPartenaire.email, {'attr': {'placeholder' : 'votre email', 'class':'form-control'}}) }}
+          {{ form_row(formPartenaire.password, {'attr': {'placeholder': 'votre mot de passe', 'class':'form-control'}}) }}
+          {{ form_row(formPartenaire.save, {'attr': {'class':'btn btn-primary', 'style':"margin-top:10px;"}}) }}
+          {{ form_end(formPartenaire) }}
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <script>
+  function openCity(evt, cityName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+    }
+    // Get the element with id="defaultOpen" and click on it
+    document.getElementById("defaultOpen").click();
+  </script>
+{% endblock %}
+

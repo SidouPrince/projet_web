@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * partenaire
@@ -80,6 +81,8 @@ class Partenaire
 
         return $this;
     }
+
+    
 
     /**
      * Get nom
@@ -176,7 +179,7 @@ class Partenaire
 
         return $this;
     }
-
+    
     /**
      * Get password
      *

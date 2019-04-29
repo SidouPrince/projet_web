@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table(name="client")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ClientRepository")
  */
-class Client implements UserInterface, \Serializable
+class Client
 {
     /**
      * @var int
@@ -99,29 +99,7 @@ class Client implements UserInterface, \Serializable
         return $this->email;
     }
 
-    /**
-     * Set Passowrd
-     *
-     * @param string $motDePasse
-     *
-     * @return Client
-     */
-    public function setPassword($motDePasse)
-    {
-        $this->motDePasse = $motDePasse;
-
-        return $this;
-    }
-    /**
-     * Get Password
-     *
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->motDePasse;
-    }
-
+    
     /**
      * Set motDePasse
      *
@@ -170,15 +148,7 @@ class Client implements UserInterface, \Serializable
         return $this->prenom;
     }
 
-    /**
-     * Get username
-     *
-     * @return string
-     */
-    public function getUsername()
-    {
-        return $this->email;
-    }
+    
 
     /**
      * Set nomDeFamille
@@ -252,45 +222,7 @@ class Client implements UserInterface, \Serializable
         return $this->sexe;
     }
 
-    public function getRoles()
-    {
-        return ['ROLE_USER'];
-    }
-
-    public function eraseCredentials()
-    {
-    }
-
-    /** @see \Serializable::serialize() */
-    public function serialize()
-    {
-        return serialize([
-            $this->id,
-            $this->email,
-            $this->motDePasse,
-            // see section on salt below
-            // $this->salt,
-        ]);
-    }
-
-    /** @see \Serializable::unserialize() */
-    public function unserialize($serialized)
-    {
-        list (
-            $this->id,
-            $this->email,
-            $this->motDePasse,
-            // see section on salt below
-            // $this->salt
-        ) = unserialize($serialized, ['allowed_classes' => false]);
-    }
-
-     public function getSalt()
-    {
-        // you *may* need a real salt depending on your encoder
-        // see section on salt below
-        return null;
-    }
+   
 
 }
 
