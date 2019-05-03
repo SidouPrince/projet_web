@@ -20,10 +20,6 @@
           <li class="nav-item active">
             <a class="nav-link" href="">Acceuil <span class="sr-only">(current)</span></a>
           </li>
-          
-          <li class="nav-item ">
-            <a class="nav-link" href="{{ path('profilePartenaire') }}">Mon profil <span class="sr-only">(current)</span></a>
-          </li>
         </ul>
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
@@ -73,14 +69,18 @@
                 <div class="register-form"  style="margin-bottom:10px;">
                   <div class="row">
                     <div class="col-sm-6" >
+                      {% if r.imagePrincipale == "default.jpeg" %}
                       <img src="http://placehold.it/700x500" class="img-fluid" alt="Responsive image">
+                      {% else %}
+                      <img src="etablissement/images/{{r.imagePrincipale }}" class="img-fluid" alt="Responsive image" height="400" width="300">
+                      {% endif %}
                     </div>
                     {# pour afficher le nom de la boutique ! #}
                     <div class="col-sm-4">
                       <p class="lead">{{r.nomSociete}}</p>
                       <p class="text-muted"> {{r.ville}} </p>
                       <p class="text-muted">{{r.rue}}</p>
-                      <button type="button" class="btn btn-outline-warning">lire la suite ..</button>
+                      <a href="{{ path('etablissement', {'id': r.id}) }}" class="text-info">Lire la suite ...</a>
                     </div>
                   </div>
                 </div>

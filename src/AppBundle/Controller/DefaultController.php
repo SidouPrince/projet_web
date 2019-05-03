@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use AppBundle\Entity\Partenaire;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\Etablissement;
+use AppBundle\Entity\Services;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -202,9 +203,9 @@ class DefaultController extends Controller
     */
     public function acceuil(Request $request){
       $session = $request ->getSession();
-      
+
       if ( $session->get('role') == "ROLE_CLIENT" ) {
-        $etablissement = new Etablissement();
+      $etablissement = new Etablissement();
       $formEtablissement1 = $this -> createFormBuilder($etablissement)
       ->add('codePostale',NumberType::class)
       ->add('save', SubmitType::class, array('label' => 'Recherche'))
@@ -230,8 +231,6 @@ class DefaultController extends Controller
            $repository=$this->getDoctrine()->getRepository('AppBundle:Etablissement');
           $list_activite=$repository->findBy(
               array('typeActivite' => $activite, 'codePostale' => $code));
-          /*return $this->render('resultat.html.twig',array('list_activite' => $list_activite));*/
-          //$list_activite=$repository->findAll();
           return $this->render('acceuil.html.twig',array('form' => $formEtablissement1->createView(),
             'resultat' => $list_activite,
             'form2'=>$formEtablissement2->createView()
@@ -277,11 +276,20 @@ class DefaultController extends Controller
       ->add('save', SubmitType::class, array('label' => 'Charger'))
       ->getForm();
 
+      //pour initialiser les prix !
+      $service = new Services();
+      $formService = $this -> createFormBuilder($service)
+      ->add('prix', NumberType::class)
+      ->add('service')
+      ->add('save', SubmitType::class, array('label' => 'valider'))
+      ->getForm();
+
       //rechrecher les etablissements que ce partenaire est proprietaire
       $repository=$this->getDoctrine()->getRepository('AppBundle:Etablissement');
               $listeEtablissement = $repository->findBy(
               array('idProprietaire' => $session->get('id')));
-
+      $nomEtablissement = $repository->findBy(
+              array('nomSociete' => $request->request->get('select')));
        $form->handleRequest($request);
         if ( $form->isSubmitted() && $form->isValid() ) {
         
@@ -295,16 +303,15 @@ class DefaultController extends Controller
           $manager = $this->getDoctrine()->getManager();
           if ( $request ->request->get('principale') == "ok" ) {
               $repository=$this->getDoctrine()->getRepository('AppBundle:Etablissement');
-              dump($request->request->get('select'));
-              $nomEtablissement = $repository->findBy(
-              array('nomSociete' => $request->request->get('select')));
-              dump($nomEtablissement);
+              
+              
+              
               $nomEtablissement[0]->setImagePrincipale($fileName);
               $manager->persist($nomEtablissement[0]);
               $manager->flush();
           }else{
            
-           $image->setProprietaire($session->get('id'));
+           $image->setProprietaire($nomEtablissement[0]->getId());
            $image -> setNomImage($fileName);
            $manager->persist($image);
            $manager->flush();
@@ -312,7 +319,8 @@ class DefaultController extends Controller
     }
     return $this->render('profilPartenaire.html.twig',array(
       'form' => $form->createView(),
-      'listeEtablissement' => $listeEtablissement
+      'listeEtablissement' => $listeEtablissement,
+      'formService' => $formService->createView()
     ));
   }else{
     return $this->redirectToRoute('login');

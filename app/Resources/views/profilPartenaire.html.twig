@@ -6,6 +6,10 @@
   
   <link rel="stylesheet" href={{asset('css/bootstrap.min.css')}}>
 {% endblock %}
+{% block javascripts %}
+  <script type="text/javascript" src="{{asset('js/script.js')}}"></script>
+  <script type="text/javascript" src="{{asset('js/profilpartenaire.js')}}"></script>
+{% endblock %}
 {% block body %}
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <a class="navbar-brand" href="#">Beaute</a>
@@ -17,23 +21,26 @@
         <li class="nav-item active">
           <a class="nav-link" href="">profil <span class="sr-only">(current)</span></a>
         </li>
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="{{ path('deconnexion') }}">Déconnecxion</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-4">
+      </ul>
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ path('deconnexion') }}">Déconnecxion</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4">
+        <fieldset>
+          <legend>Photos pour entreprise</legend>
           {{ form_start(form) }}
           {{ form_row(form.nomImage) }}
           <div class="form-group">
             <label for="selection">Choisir votre établissement </label>
             <select class="form-control" id="selection" name="select">
               {% for etablissement in listeEtablissement %}
-              <option>{{ etablissement.nomSociete }}</option>
+                <option>{{ etablissement.nomSociete }}</option>
               {% endfor %}
             </select>
           </div>
@@ -43,8 +50,37 @@
               Utiliser cette image comme image principale
             </label>
           </div>
+          {{ form_row(form.save, {'attr': {'class': 'btn btn-secondary'}}) }}
           {{ form_end(form) }}
-        </div>
+        </fieldset>
+      </div>
+      {# ###################################################################### #}
+      <div class="col-sm-4">
+        <fieldset>
+          <legend>Compléter les services !</legend>
+          {{ form_start(formService) }}
+          <div class="form-group">
+            <label for="selection">Choisir votre établissement </label>
+            <select class="form-control" id="selection" name="select">
+              {% for etablissement in listeEtablissement %}
+                <option>{{ etablissement.nomSociete }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="service">Service </label>
+            <input type="text" name="service" class="form-control" id="service" placeholder="Votre service">
+          </div>
+          <div class="form-group">
+            <label for="prix">Prix  </label>
+            <input type="number" name="prix" class="form-control" id="prix" placeholder="Votre prix">
+          </div>
+          
+          <img src="images/ajax-loader.gif" alt="mon gif" style="display: none;" id="monGif">
+          <button type="submit" id="btnService" class="btn btn-secondary">Valider</button>
+          {{ form_end(form) }}
+        </fieldset>
       </div>
     </div>
-  {% endblock %}
+  </div>
+{% endblock %}
