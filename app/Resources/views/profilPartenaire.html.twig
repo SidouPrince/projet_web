@@ -7,6 +7,7 @@
   <link rel="stylesheet" href={{asset('css/bootstrap.min.css')}}>
 {% endblock %}
 {% block javascripts %}
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script type="text/javascript" src="{{asset('js/script.js')}}"></script>
   <script type="text/javascript" src="{{asset('js/profilpartenaire.js')}}"></script>
 {% endblock %}
@@ -58,12 +59,19 @@
       <div class="col-sm-4">
         <fieldset>
           <legend>Compléter les services !</legend>
+          {# Alerte de succes #}
+          <div class="alert alert-dismissible alert-secondary" style="display:none" id="alertService">
+            Service ajouté avec succes 
+          </div>
+          
           {{ form_start(formService) }}
           <div class="form-group">
             <label for="selection">Choisir votre établissement </label>
-            <select class="form-control" id="selection" name="select">
+            <select class="form-control" id="societe">
+              
               {% for etablissement in listeEtablissement %}
-                <option>{{ etablissement.nomSociete }}</option>
+                <option>{{  etablissement.nomSociete }}</option>
+                <option style="display:none;" value="{{  etablissement.id }}" id="{{  etablissement.nomSociete }}"></option>
               {% endfor %}
             </select>
           </div>
@@ -77,7 +85,8 @@
           </div>
           
           <img src="images/ajax-loader.gif" alt="mon gif" style="display: none;" id="monGif">
-          <button type="submit" id="btnService" class="btn btn-secondary">Valider</button>
+          {# <button type="submit" id="btnService" class="btn btn-secondary" href="pour">Valider</button> #}
+          <a href="{{ path('ajoutService') }}" id="btnService" class="btn btn-secondary">Valider</a>
           {{ form_end(form) }}
         </fieldset>
       </div>

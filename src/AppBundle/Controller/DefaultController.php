@@ -317,6 +317,7 @@ class DefaultController extends Controller
            $manager->flush();
         }
     }
+    dump($request);
     return $this->render('profilPartenaire.html.twig',array(
       'form' => $form->createView(),
       'listeEtablissement' => $listeEtablissement,
@@ -325,6 +326,26 @@ class DefaultController extends Controller
   }else{
     return $this->redirectToRoute('login');
   }      
-      }    
+      }  
+      /**
+      @Route("/profil-partenaire/ajout-service",name="ajoutService") 
+      */  
+      public function ajout_service(Request $request){
+        $manager = $this->getDoctrine()->getManager();
+        $service = new Services();
+
+        $data = $request->getContent();
+        $data = json_decode($data, true);
+
+        $service->setService($data['service']);
+        $service->setIdEtablissement($data['societe']);
+        $service->setPrix($data['prix']);
+
+        $manager->persist($service);
+        $manager->flush();
+        return $this->json(['code' => 200,
+          'message' => 'ça Marche frerot'
+        ], 200);
+      }
   }
 
