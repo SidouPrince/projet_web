@@ -9,18 +9,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 {% endblock %}
 {% block javascripts %}
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script type="text/javascript" src="{{ asset('js/script.js') }}"></script>
   <script type="text/javascript" src="{{ asset('js/connexion.js') }}"></script>
 {% endblock %}
 {% block body %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+		<a class="navbar-brand" href="#">Mon site</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarColor01">
+			<ul class="navbar-nav mr-auto">
+			  <li class="nav-item active">
+					<a  class="nav-link" href="">Login</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
   <div class="container-fluid">
     <div class="row">
+      <div class="col-sm-4"></div>
       <div class="col-sm-4">
         <legend><p class="text-muted" style="text-align: center;">Connexion</p></legend>
 
         <div class="alert alert-dismissible alert-danger" id="authentificationError">
           <input type="hidden" value="{{ noUser }}" id="dejaExiste">
-          <strong>Oh mince !</strong> Erreur d'authentification !
+        <strong>Oh mince !</strong> Erreur d'authentification !
         </div>
 
         <div class="tab">

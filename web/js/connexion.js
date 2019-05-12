@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).ready(function() {
     //cacher la div dalerte si un email existe déja
     $('#authentificationError').hide();
     /*
@@ -9,5 +9,6 @@ $(document).ready(function(){
     console.log(Existe)
     if (Existe == 1) {
         $('#authentificationError').show();
-    } 
+    }
+    
 });

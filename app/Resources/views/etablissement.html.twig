@@ -6,6 +6,10 @@
   
   <link rel="stylesheet" href={{asset('css/bootstrap.min.css')}}>
 {% endblock %}
+{% block javascripts %}
+  <script type="text/javascript" src="{{asset('js/script.js')}}"></script>
+  <script type="text/javascript" src="{{asset('js/etablissement.js')}}"></script>
+{% endblock %}
 {% block body %}
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <a class="navbar-brand" href="#">Beaute</a>
@@ -30,10 +34,22 @@
     </div>
   </nav>
   <div class="container">
-    <div class="row">
-      <div style="border: solid red 2px; width: 100%; height: 300px; margin-top: 20px;">
+      <div class="row" style="margin-top: 15px;">
+        <div class="col-sm-2"></div>
+        <div id="carrousel" class="col-sm-8">
+          <ul style="list-style: none;">
+            {% if images is defined and images|length > 0 %}
+              {% for i in images %}
+                <li><img src="{{ asset('etablissement/images/'~ i.nomImage) }}" alt="Responsive image" height="300px;"></li>
+              {% endfor %}
+            {% else %}
+              <li><img src="http://placehold.it/700x500" alt="Responsive image" height="300px;" width="500px;"></li>
+            {% endif %}
+          </ul>
+          <button type="button" class="btn btn-link prev">Prev</button>
+          <button type="button" class="btn btn-link next">Suivant</button>
+        </div>
       </div>
-    </div>
   </div>
   {# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #}
   <div class="container" style="margin-top: 10px;">
@@ -47,7 +63,7 @@
       </div>
       <div class="col-sm-4">
         <ul class="list-inline">
-          <li class="list-inline-item"><button type="button" class="btn btn-outline-primary">Prendre Rendez-vous</button></li>
+          <li class="list-inline-item"><button id="btnRDV" type="button" class="btn btn-outline-primary">Prendre Rendez-vous</button></li>
         </ul>
       </div>
     </div>
@@ -56,7 +72,16 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-6" style=" margin-top: 10px;">
-        <p class="lead">Sérvices proposés</p>
+        <div class="card border-primary mb-3" style="max-width: 20rem;">
+          <div class="card-header">Créneaux</div>
+          <div class="card-body">
+            <h5>Veuillez choisir un créneau </h5>
+            <button type="button" class="btn btn-link">Link</button></br>
+            <button type="button" class="btn btn-link">Link</button></br>
+            <button type="button" class="btn btn-link">Link</button></br>
+            <button type="button" class="btn btn-link">Link</button></br>
+          </div>
+        </div>
       </div>
       <div class="col-sm-6">
         <table class="table table-hover">
@@ -67,10 +92,20 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="table-active">
-              <td>coupe </td>
-              <td>10 euros</td>
-            </tr>
+            <p class="lead">Sérvices proposés</p>
+            {% if services is defined and services | length > 0 %}
+              {% for x in services %}
+                <tr class="table-warning">
+                  <td>{{x.service }}</td>
+                  <td>{{x.prix}}</td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr class="table-warning">
+                <td>default </td>
+                <td>default</td>
+              </tr>
+            {% endif %}
           </tbody>
         </table>
       </div>

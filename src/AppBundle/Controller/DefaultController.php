@@ -33,6 +33,7 @@ class DefaultController extends Controller
       return $this->render('home.html.twig');
     }
 
+
 /**
   @Route("/login",name="login")
   *

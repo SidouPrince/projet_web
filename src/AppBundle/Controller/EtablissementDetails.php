@@ -32,15 +32,21 @@ class EtablissementDetails extends Controller
         $repository=$this->getDoctrine()->getRepository('AppBundle:imageEtablissement');
         $images = $repository->findBy(
               array('proprietaire' => $id));
-
+        dump($images);
         //selectionner les infos du letablissement
         $rep=$this->getDoctrine()->getRepository('AppBundle:Etablissement');
         $infos = $rep->findBy(
               array('id' => $id));
 
+        //selectionner les services du letablissement
+        $rep=$this->getDoctrine()->getRepository('AppBundle:Services');
+        $services = $rep->findBy(
+              array('idEtablissement' => $id));
+
       return $this->render('etablissement.html.twig',[
         "images" => $images,
-        "infos" => $infos[0]
+        "infos" => $infos[0],
+        "services" => $services
       ]);
     }
 }
